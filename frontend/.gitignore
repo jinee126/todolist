@@ -1,0 +1,25 @@
+# Node modules
+**/node_modules/
+**/.next/
+
+# Build outputs
+**/build/
+**/dist/
+**/target/
+
+# IDE
+**/.idea/
+**/.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment files
+**/.env.local
+**/.env
+
+# Logs
+**/logs/
+**/*.log
