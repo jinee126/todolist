@@ -6,7 +6,11 @@ import { todoApi } from '@/lib/api';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
 
-export default function TodoList() {
+interface TodoListProps {
+  filter?: string;
+}
+
+export default function TodoList({ filter = 'all' }: TodoListProps) {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,10 +102,26 @@ export default function TodoList() {
     );
   }
 
+  // 필터링된 todos
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true; // 'all' or other filters
+  });
+
+  const getFilterTitle = () => {
+    switch (filter) {
+      case 'active': return '진행중인 할 일';
+      case 'completed': return '완료된 할 일';
+      case 'list': return '전체 목록';
+      default: return 'Todo List';
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        Todo List
+        {getFilterTitle()}
       </h1>
 
       {error && (
@@ -113,12 +133,14 @@ export default function TodoList() {
       <TodoForm onAddTodo={handleAddTodo} />
 
       <div className="mt-6 space-y-2">
-        {todos.length === 0 ? (
+        {filteredTodos.length === 0 ? (
           <p className="text-center text-gray-500 py-8">
-            No todos yet. Add one above!
+            {filter === 'active' && '진행중인 할 일이 없습니다'}
+            {filter === 'completed' && '완료된 할 일이 없습니다'}
+            {(filter === 'all' || filter === 'list') && '리스트 없음'}
           </p>
         ) : (
-          todos.map(todo => (
+          filteredTodos.map(todo => (
             <TodoItem
               key={todo.id}
               todo={todo}
@@ -131,7 +153,7 @@ export default function TodoList() {
       </div>
 
       <div className="mt-6 text-center text-sm text-gray-500">
-        Total: {todos.length} | Completed: {todos.filter(t => t.completed).length}
+        Total: {todos.length} | Completed: {todos.filter(t => t.completed).length} | Active: {todos.filter(t => !t.completed).length}
       </div>
     </div>
   );

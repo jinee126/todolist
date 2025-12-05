@@ -67,7 +67,7 @@ GRANT CONNECT, RESOURCE, DBA TO your_username;
 ```yaml
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:XE
+    url: jdbc:oracle:thin:@localhost:152:XE
     username: your_username
     password: your_password
 ```

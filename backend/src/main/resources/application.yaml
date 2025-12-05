@@ -3,9 +3,9 @@ spring:
     name: todoList
   
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:XE
-    username: your_username
-    password: your_password
+    url: jdbc:oracle:thin:@localhost:1522:XE
+    username: jinee
+    password: 1234
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       maximum-pool-size: 10

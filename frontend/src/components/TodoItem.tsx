@@ -66,14 +66,14 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemP
             onClick={() => setIsEditing(true)}
             className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
           >
-            Edit
+            수정
           </button>
         )}
         <button
           onClick={() => onDelete(todo.id)}
           className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors"
         >
-          Delete
+          삭제
         </button>
       </div>
     </div>

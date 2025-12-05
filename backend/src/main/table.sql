@@ -3,16 +3,16 @@
 -- Database: Oracle 12c
 -- ============================================
 
--- 기존 테이블이 있으면 삭제 (선택사항)
-DROP TABLE todos CASCADE CONSTRAINTS;
-
--- 시퀀스 삭제 (선택사항)
-DROP SEQUENCE todos_seq;
-
 -- ============================================
--- 시퀀스 생성 (Auto Increment 역할)
+-- 시퀀스 생성
 -- ============================================
 CREATE SEQUENCE todos_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+CREATE SEQUENCE commoncode_seq
     START WITH 1
     INCREMENT BY 1
     NOCACHE
@@ -83,25 +83,27 @@ COMMENT ON COLUMN todos.created_at IS '생성 일시';
 COMMENT ON COLUMN todos.updated_at IS '수정 일시';
 
 -- ============================================
--- 샘플 데이터 삽입 (선택사항)
+-- 샘플 데이터
 -- ============================================
 INSERT INTO todos (title, completed) VALUES ('Spring Boot 프로젝트 설정', 1);
-INSERT INTO todos (title, completed) VALUES ('JPA Entity 작성', 1);
-INSERT INTO todos (title, completed) VALUES ('REST API 구현', 1);
-INSERT INTO todos (title, completed) VALUES ('Next.js 프론트엔드 개발', 1);
-INSERT INTO todos (title, completed) VALUES ('데이터베이스 연동 테스트', 0);
-INSERT INTO todos (title, completed) VALUES ('프로젝트 배포', 0);
-
-COMMIT;
 
 -- ============================================
--- 확인 쿼리
+-- 공통코드 테이블
 -- ============================================
--- 테이블 구조 확인
-SELECT * FROM user_tab_columns WHERE table_name = 'TODOS' ORDER BY column_id;
+CREATE TABLE common_code
+(
+    common_code_id VARCHAR2(50) PRIMARY KEY,
+    upper_code VARCHAR2(50),
+    use_yn         CHAR(1) DEFAULT 1 NOT NULL,
+    common_codeNm    VARCHAR2(50),
+    seq VARCHAR2(10)
+);
 
--- 데이터 확인
-SELECT * FROM todos ORDER BY created_at DESC;
+COMMENT ON COLUMN common_code.common_code_id IS '코드id';
+COMMENT ON COLUMN common_code.upper_code IS '상위코드';
+COMMENT ON COLUMN common_code.use_yn IS '사용여부 (0: 미사용, 1: 사용)';
+COMMENT ON COLUMN common_code.common_codeNm IS '코드명';
+COMMENT ON COLUMN common_code.seq IS '순서';
 
--- 시퀀스 현재 값 확인
-SELECT todos_seq.CURRVAL FROM dual;
+
+
