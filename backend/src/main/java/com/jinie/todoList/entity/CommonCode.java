@@ -1,9 +1,6 @@
 package com.jinie.todoList.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -21,10 +18,22 @@ import lombok.*;
 public class CommonCode {
 
     @Id
-    private Long seq;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonCodeId")
+    @SequenceGenerator(
+            name = "commonCodeId",
+            sequenceName = "commoncode_seq",  // Oracle의 실제 시퀀스 이름
+            allocationSize = 1  // 중요: Oracle 시퀀스와 동기화
+    )
+
+    @Column
+    private Long id ;
 
     @Column
     private String commonCodeId ;
+
+    @Column
+    private Long seq;
+
     @Column
     private String upperCode;
     @Column

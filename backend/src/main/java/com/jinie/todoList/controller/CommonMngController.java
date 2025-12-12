@@ -6,12 +6,14 @@ import com.jinie.todoList.dto.TodoResponse;
 import com.jinie.todoList.service.CommonCodeService;
 import com.jinie.todoList.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/commonCode")
 @RequiredArgsConstructor
@@ -23,6 +25,13 @@ public class CommonMngController {
     public ResponseEntity<List<CommonCodeDto>> getAllTodos() {
         List<CommonCodeDto> list = commonCodeService.getCommonList();
         return ResponseEntity.ok(list);
+    }
+
+    @PostMapping
+    public ResponseEntity<CommonCodeDto> saveCommonCode(@RequestBody CommonCodeDto param) {
+        log.debug("확인 {}" ,param.toString() );
+        CommonCodeDto  dto = commonCodeService.saveCommonCode(param);
+        return ResponseEntity.ok(dto);
     }
 
 }
