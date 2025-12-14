@@ -28,7 +28,7 @@ public class TodoService {
     
     public TodoResponse getTodoById(Long id) {
         Todo todo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Todo not found with id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다"));
         return TodoResponse.from(todo);
     }
     
@@ -48,7 +48,7 @@ public class TodoService {
     @Transactional
     public TodoResponse updateTodo(Long id, TodoRequest request) {
         Todo todo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Todo not found with id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("할일을 찾을 수 없습니다"));
         
         if (request.getTitle() != null) {
             todo.setTitle(request.getTitle());
@@ -58,14 +58,14 @@ public class TodoService {
         }
         todo.setUpdatedAt(LocalDateTime.now());
         
-        Todo updatedTodo = todoRepository.save(todo);
-        return TodoResponse.from(updatedTodo);
+        return TodoResponse.from(todoRepository.save(todo));
     }
     
     @Transactional
     public void deleteTodo(Long id) {
+        //TODO: existsById 대신 findById로 변경 고려
         if (!todoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Todo not found with id: " + id);
+            throw new IllegalArgumentException("할일을 찾을 수 없습니다");
         }
         todoRepository.deleteById(id);
     }
