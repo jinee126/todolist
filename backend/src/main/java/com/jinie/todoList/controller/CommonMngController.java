@@ -27,11 +27,22 @@ public class CommonMngController {
         return ResponseEntity.ok(list);
     }
 
+    //저장
     @PostMapping
-    public ResponseEntity<CommonCodeDto> saveCommonCode(@RequestBody CommonCodeDto param) {
+    public ResponseEntity<CommonCodeDto> saveCommonCode(@RequestBody CommonCodeDto param) throws Exception {
         log.debug("확인 {}" ,param.toString() );
         CommonCodeDto  dto = commonCodeService.saveCommonCode(param);
         return ResponseEntity.ok(dto);
     }
+
+    //삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity delCommonCode(@PathVariable Long id) {
+        log.debug("id : "+id);
+        commonCodeService.deleteCommonCode(id);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }

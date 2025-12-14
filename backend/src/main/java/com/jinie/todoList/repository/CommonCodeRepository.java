@@ -11,4 +11,5 @@ public interface CommonCodeRepository extends JpaRepository<CommonCode, Long> {
 
     List<CommonCode> findAllByUseYn(String useYn);
 
+    Long countByCommonCodeId(String commonCodeId);
 }

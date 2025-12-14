@@ -10,11 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Slf4j
-@RequiredArgsConstructor //final 필드 생성자주입
+@RequiredArgsConstructor
 @Service
 public class CommonCodeService {
 
@@ -28,14 +29,27 @@ public class CommonCodeService {
                 .collect(Collectors.toList());
     }
 
+    //중복체크
+    public Long getCountByCommonCodeId(String commonCodeId){
+        return commonCodeRepository.countByCommonCodeId(commonCodeId);
+    }
+
     @Transactional
-    public CommonCodeDto saveCommonCode(CommonCodeDto param){
-        log.debug("들어오나");
-        //중복체크 로직
+    public CommonCodeDto saveCommonCode(CommonCodeDto param) throws Exception {
+        //TODO: 중복체크 로직 추가 필요
+        Long count = getCountByCommonCodeId(param.getCommonCodeId());
+        if(count > 0){
+            throw new Exception("공통코드 ID가 존재합니다.");
+        }
 
         CommonCode  arg = param.toEntity();
         CommonCode savedEntity = commonCodeRepository.save(arg);
         return CommonCodeDto.toDto(savedEntity);
+    }
+
+    @Transactional
+    public void deleteCommonCode(Long id){
+        commonCodeRepository.deleteById(id);
     }
 
 

@@ -3,6 +3,7 @@
 import {useEffect, useState, useCallback} from 'react';
 
 interface CommonCode {
+    id?: number;
     seq?: number;
     commonCodeId: string;
     commonCodeNm: string;
@@ -14,11 +15,14 @@ interface CommonCode {
 
 export default function Home() {
     const [codes, setCodes] = useState<CommonCode[]>([]);
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editData, setEditData] = useState<CommonCode | null>(null);
 
     const fetchCommonList = useCallback(async () => {
         try {
             const response = await fetch('http://localhost:8080/api/commonCode');
             const data = await response.json();
+            console.log(data);
             setCodes(data);
         } catch (error) {
             console.error('공통코드 조회 실패:', error);
@@ -44,7 +48,6 @@ export default function Home() {
         setCodes([...codes, newRow]);
     };
 
-    // ✅ updateCode 함수 추가
     const updateCode = (index: number, field: keyof CommonCode, value: string | number) => {
         const updatedCodes = codes.map((code, i) => {
             if (i === index) {
@@ -55,18 +58,16 @@ export default function Home() {
         setCodes(updatedCodes);
     };
 
-    // ✅ 저장 함수 추가
     const saveCode = async (index: number) => {
         const code = codes[index];
         
-        // 유효성 검사
         if (!code.commonCodeId || !code.commonCodeNm) {
             alert('공통코드 ID와 코드명은 필수입니다.');
             return;
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/common-codes', {
+            const response = await fetch('http://localhost:8080/api/commonCode', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,19 +86,64 @@ export default function Home() {
             alert('저장 중 오류가 발생했습니다.');
         }
     };
+    const updateBtn = async (code: CommonCode) => {
+        setEditingId(code.id || null);
+        setEditData({ ...code });
+    }
+
+    const cancelEdit = () => {
+        setEditingId(null);
+        setEditData(null);
+    }
+
+    const saveEdit = async () => {
+        if (!editData) return;
+
+        if (!editData.commonCodeId || !editData.commonCodeNm) {
+            alert('공통코드 ID와 코드명은 필수입니다.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/commonCode/${editData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(editData),
+            });
+
+            if (response.ok) {
+                alert('수정되었습니다.');
+                await fetchCommonList();
+                setEditingId(null);
+                setEditData(null);
+            } else {
+                alert('수정에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('수정 실패:', error);
+            alert('수정 중 오류가 발생했습니다.');
+        }
+    }
+
+    const updateEditData = (field: keyof CommonCode, value: string | number) => {
+        if (!editData) return;
+        setEditData({ ...editData, [field]: value });
+    }
 
     // ✅ 삭제 함수 수정
     const deleteCode = async (index: number) => {
         const code = codes[index];
         
         // seq가 있으면 서버에서 삭제
-        if (code.seq) {
+        if (code.id) {
             if (!confirm('삭제하시겠습니까?')) {
                 return;
             }
             
             try {
-                const response = await fetch(`http://localhost:8080/api/common-codes/${code.seq}`, {
+                const response = await fetch(`http://localhost:8080/api/commonCode/${code.id}`, {
                     method: 'DELETE',
                 });
 
@@ -171,7 +217,7 @@ export default function Home() {
                         ) : (
                             codes.map((code, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    {!code.seq ? (
+                                    {!code.id ? (
                                         <>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 <input
@@ -229,6 +275,63 @@ export default function Home() {
                                         </>
                                     ) : (
                                         <>
+                                            {editingId === code.id ? (
+                                                // 편집 모드
+                                                <>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <input
+                                                            type="text"
+                                                            value={editData?.commonCodeId || ''}
+                                                            onChange={(e) => updateEditData('commonCodeId', e.target.value)}
+                                                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <input
+                                                            type="text"
+                                                            value={editData?.commonCodeNm || ''}
+                                                            onChange={(e) => updateEditData('commonCodeNm', e.target.value)}
+                                                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <input
+                                                            type="text"
+                                                            value={editData?.upperCode || ''}
+                                                            onChange={(e) => updateEditData('upperCode', e.target.value)}
+                                                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <input
+                                                            type="number"
+                                                            value={editData?.order || 0}
+                                                            onChange={(e) => updateEditData('order', parseInt(e.target.value) || 0)}
+                                                            className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                                                        <select
+                                                            value={editData?.useYn || 'Y'}
+                                                            onChange={(e) => updateEditData('useYn', e.target.value)}
+                                                            className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                        >
+                                                            <option value="Y">Y</option>
+                                                            <option value="N">N</option>
+                                                        </select>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                                        <button onClick={saveEdit} className="text-green-600 hover:text-green-900 mr-3">
+                                                            저장
+                                                        </button>
+                                                        <button onClick={cancelEdit} className="text-gray-600 hover:text-gray-900">
+                                                            취소
+                                                        </button>
+                                                    </td>
+                                                </>
+                                            ) : (
+                                                // 일반 모드
+                                                <>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 {code.commonCodeId}
                                             </td>
@@ -247,13 +350,15 @@ export default function Home() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                                <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                <button onClick={()=> updateBtn(code)} className="text-indigo-600 hover:text-indigo-900 mr-3">
                                                     수정
                                                 </button>
                                                 <button onClick={() => deleteCode(index)} className="text-red-600 hover:text-red-900">
                                                     삭제
                                                 </button>
                                             </td>
+                                                </>
+                                            )}
                                         </>
                                     )}
                                 </tr>
