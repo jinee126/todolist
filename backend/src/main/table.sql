@@ -92,7 +92,8 @@ INSERT INTO todos (title, completed) VALUES ('Spring Boot 프로젝트 설정', 
 -- ============================================
 CREATE TABLE common_code
 (
-    common_code_id VARCHAR2(50) PRIMARY KEY,
+    id number ,
+    common_code_id VARCHAR2(50) ,
     upper_code VARCHAR2(50),
     use_yn         CHAR(1) DEFAULT 1 NOT NULL,
     common_codeNm    VARCHAR2(50),
