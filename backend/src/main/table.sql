@@ -106,5 +106,7 @@ COMMENT ON COLUMN common_code.use_yn IS '사용여부 (0: 미사용, 1: 사용)'
 COMMENT ON COLUMN common_code.common_codeNm IS '코드명';
 COMMENT ON COLUMN common_code.seq IS '순서';
 
+        수정?
+
 
 
