@@ -43,6 +43,14 @@ public class CommonMngController {
         return ResponseEntity.ok().build();
     }
 
+    //수정
+    @PutMapping()
+    public ResponseEntity<CommonCodeDto> updateCommonCode(@RequestBody CommonCodeDto param) throws Exception{
+        CommonCodeDto dto  = commonCodeService.updateCommonCode(param);
+        return ResponseEntity.ok(dto);
+    }
+
+
 
 
 }

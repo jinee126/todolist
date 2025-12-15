@@ -3,13 +3,12 @@
 import {useEffect, useState, useCallback} from 'react';
 
 interface CommonCode {
-    id?: number;
-    seq?: number;
-    commonCodeId: string;
-    commonCodeNm: string;
+    commonCodeSeq?: number;
+    codeId: string;
+    codeNm: string;
     upperCode: string;
-    order: number;
-    useYn: string;
+    codeUseYn: string;
+    codeOrder: number;
 }
 
 
@@ -39,11 +38,11 @@ export default function Home() {
 
     const addLayer = () => {
         const newRow: CommonCode = {
-            commonCodeId: '',
-            commonCodeNm: '',
+            codeId: '',
+            codeNm: '',
             upperCode: '',
-            order: 0,
-            useYn: 'Y',
+            codeOrder: 0,
+            codeUseYn: 'Y',
         };
         setCodes([...codes, newRow]);
     };
@@ -61,7 +60,7 @@ export default function Home() {
     const saveCode = async (index: number) => {
         const code = codes[index];
         
-        if (!code.commonCodeId || !code.commonCodeNm) {
+        if (!code.codeId || !code.codeNm) {
             alert('공통코드 ID와 코드명은 필수입니다.');
             return;
         }
@@ -87,7 +86,7 @@ export default function Home() {
         }
     };
     const updateBtn = async (code: CommonCode) => {
-        setEditingId(code.id || null);
+        setEditingId(code.commonCodeSeq || null);
         setEditData({ ...code });
     }
 
@@ -99,13 +98,13 @@ export default function Home() {
     const saveEdit = async () => {
         if (!editData) return;
 
-        if (!editData.commonCodeId || !editData.commonCodeNm) {
+        if (!editData.codeId || !editData.codeNm) {
             alert('공통코드 ID와 코드명은 필수입니다.');
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/commonCode/${editData.id}`, {
+            const response = await fetch(`http://localhost:8080/api/commonCode`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -137,13 +136,13 @@ export default function Home() {
         const code = codes[index];
         
         // seq가 있으면 서버에서 삭제
-        if (code.id) {
+        if (code.commonCodeSeq) {
             if (!confirm('삭제하시겠습니까?')) {
                 return;
             }
             
             try {
-                const response = await fetch(`http://localhost:8080/api/commonCode/${code.id}`, {
+                const response = await fetch(`http://localhost:8080/api/commonCode/${code.commonCodeSeq}`, {
                     method: 'DELETE',
                 });
 
@@ -217,13 +216,13 @@ export default function Home() {
                         ) : (
                             codes.map((code, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    {!code.id ? (
+                                    {!code.commonCodeSeq ? (
                                         <>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 <input
                                                     type="text"
-                                                    value={code.commonCodeId}
-                                                    onChange={(e) => updateCode(index, 'commonCodeId', e.target.value)}
+                                                    value={code.codeId}
+                                                    onChange={(e) => updateCode(index, 'codeId', e.target.value)}
                                                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                     placeholder="ID 입력"
                                                 />
@@ -231,8 +230,8 @@ export default function Home() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 <input
                                                     type="text"
-                                                    value={code.commonCodeNm}
-                                                    onChange={(e) => updateCode(index, 'commonCodeNm', e.target.value)}
+                                                    value={code.codeNm}
+                                                    onChange={(e) => updateCode(index, 'codeNm', e.target.value)}
                                                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                     placeholder="코드명 입력"
                                                 />
@@ -249,15 +248,15 @@ export default function Home() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <input
                                                     type="number"
-                                                    value={code.order}
-                                                    onChange={(e) => updateCode(index, 'order', parseInt(e.target.value) || 0)}
+                                                    value={code.codeOrder}
+                                                    onChange={(e) => updateCode(index, 'codeOrder', parseInt(e.target.value) || 0)}
                                                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                 />
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center">
                                                 <select
-                                                    value={code.useYn}
-                                                    onChange={(e) => updateCode(index, 'useYn', e.target.value)}
+                                                    value={code.codeUseYn}
+                                                    onChange={(e) => updateCode(index, 'codeUseYn', e.target.value)}
                                                     className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                 >
                                                     <option value="Y">Y</option>
@@ -275,22 +274,22 @@ export default function Home() {
                                         </>
                                     ) : (
                                         <>
-                                            {editingId === code.id ? (
+                                            {editingId === code.commonCodeSeq ? (
                                                 // 편집 모드
                                                 <>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                         <input
                                                             type="text"
-                                                            value={editData?.commonCodeId || ''}
-                                                            onChange={(e) => updateEditData('commonCodeId', e.target.value)}
+                                                            value={editData?.codeId || ''}
+                                                            onChange={(e) => updateEditData('codeId', e.target.value)}
                                                             className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                         <input
                                                             type="text"
-                                                            value={editData?.commonCodeNm || ''}
-                                                            onChange={(e) => updateEditData('commonCodeNm', e.target.value)}
+                                                            value={editData?.codeNm || ''}
+                                                            onChange={(e) => updateEditData('codeNm', e.target.value)}
                                                             className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                         />
                                                     </td>
@@ -305,15 +304,15 @@ export default function Home() {
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         <input
                                                             type="number"
-                                                            value={editData?.order || 0}
-                                                            onChange={(e) => updateEditData('order', parseInt(e.target.value) || 0)}
+                                                            value={editData?.codeOrder || 0}
+                                                            onChange={(e) => updateEditData('codeOrder', parseInt(e.target.value) || 0)}
                                                             className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-center">
                                                         <select
-                                                            value={editData?.useYn || 'Y'}
-                                                            onChange={(e) => updateEditData('useYn', e.target.value)}
+                                                            value={editData?.codeUseYn || 'Y'}
+                                                            onChange={(e) => updateEditData('codeUseYn', e.target.value)}
                                                             className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                         >
                                                             <option value="Y">Y</option>
@@ -333,20 +332,20 @@ export default function Home() {
                                                 // 일반 모드
                                                 <>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {code.commonCodeId}
+                                                {code.codeId}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {code.commonCodeNm}
+                                                {code.codeNm}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {code.upperCode || '-'}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {code.order}
+                                                {code.codeOrder}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                                <span className={`px-2 py-1 rounded ${code.useYn === 'Y' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                                                    {code.useYn}
+                                                <span className={`px-2 py-1 rounded ${code.codeUseYn === 'Y' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                                    {code.codeUseYn}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">

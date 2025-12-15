@@ -17,41 +17,56 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CommonCodeService {
 
     private final CommonCodeRepository commonCodeRepository;
 
 
     public List<CommonCodeDto> getCommonList(){
-        return commonCodeRepository.findAllByUseYn("Y")
+        return commonCodeRepository.findAll()
                 .stream()
                 .map(CommonCodeDto::toDto)
                 .collect(Collectors.toList());
     }
 
     //중복체크
-    public Long getCountByCommonCodeId(String commonCodeId){
-        return commonCodeRepository.countByCommonCodeId(commonCodeId);
+    public Long getCountByCodeId(String codeId){
+        return commonCodeRepository.countByCodeId(codeId);
     }
 
-    @Transactional
+
     public CommonCodeDto saveCommonCode(CommonCodeDto param) throws Exception {
         //TODO: 중복체크 로직 추가 필요
-        Long count = getCountByCommonCodeId(param.getCommonCodeId());
+        Long count = commonCodeRepository.countByCodeId(param.getCodeId());
         if(count > 0){
             throw new Exception("공통코드 ID가 존재합니다.");
         }
-
         CommonCode  arg = param.toEntity();
         CommonCode savedEntity = commonCodeRepository.save(arg);
         return CommonCodeDto.toDto(savedEntity);
     }
 
-    @Transactional
     public void deleteCommonCode(Long id){
         commonCodeRepository.deleteById(id);
     }
 
+    public CommonCodeDto updateCommonCode(CommonCodeDto param)  throws Exception {
+        //dirty checking - 변경감지
 
+        //id
+        CommonCode info = commonCodeRepository.findById(param.getCommonCodeSeq())
+                .orElseThrow(()-> new Exception("공통코드를 찾을 수 없음 : "+param.getCommonCodeSeq())); //내부에서 throw함
+
+        //commoncode id 중복체크
+        if (!info.getCodeId().equals(param.getCodeId())) {
+            long duplCnt = commonCodeRepository.countByCodeId(param.getCodeId());
+            if (duplCnt > 0) {
+                throw new Exception("공통코드 중복 getCodeId : " + param.getCodeId());
+            }
+        }
+        info.update(param);
+        return CommonCodeDto.toDto(info);
+    }
 
 }

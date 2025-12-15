@@ -13,31 +13,32 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommonCodeDto {
 
-    private Long seq;
-    private Long id;
-    private String commonCodeId;
+    private Long commonCodeSeq;
+    private String codeId;
+    private String codeNm;
     private String upperCode;
-    private String useYn;
-    private String commonCodeNm;
+    private String codeUseYn;
+    private String codeOrder;
 
     public static CommonCodeDto toDto(CommonCode entity){
         return CommonCodeDto.builder()
-                .id(entity.getId())
-                .seq(entity.getSeq())
-                .commonCodeId(entity.getCommonCodeId())
+                .commonCodeSeq(entity.getCommonCodeSeq())
+                .codeId(entity.getCodeId())
+                .codeNm(entity.getCodeNm())
                 .upperCode(entity.getUpperCode())
-                .useYn(entity.getUseYn())
-                .commonCodeNm(entity.getCommonCodeNm())
+                .codeUseYn(entity.getCodeUseYn())
+                .codeOrder(entity.getCodeOrder())
                 .build();
     }
 
     public  CommonCode toEntity(){
         return CommonCode.builder()
-                .seq(this.getSeq())
-                .commonCodeId(this.getCommonCodeId())
+                .commonCodeSeq(this.commonCodeSeq)
+                .codeId(this.getCodeId())
+                .codeNm(this.getCodeNm())
                 .upperCode(this.getUpperCode())
-                .useYn(this.getUseYn())
-                .commonCodeNm(this.getCommonCodeNm())
+                .codeUseYn(this.getCodeUseYn())
+                .codeOrder(this.getCodeOrder())
                 .build();
     }
 

@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface CommonCodeRepository extends JpaRepository<CommonCode, Long> {
 
-    List<CommonCode> findAllByUseYn(String useYn);
-
-    Long countByCommonCodeId(String commonCodeId);
+    Long countByCodeId(String codeId);
 }

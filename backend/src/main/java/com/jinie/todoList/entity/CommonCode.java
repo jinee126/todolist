@@ -1,5 +1,6 @@
 package com.jinie.todoList.entity;
 
+import com.jinie.todoList.dto.CommonCodeDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,28 +15,35 @@ import lombok.*;
 public class CommonCode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonCodeId")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "commonCodeSeq")
     @SequenceGenerator(
-            name = "commonCodeId",
-            sequenceName = "commoncode_seq",
+            name = "commonCodeSeq",
+            sequenceName = "common_code_seq",
             allocationSize = 1
     )
-
     @Column
-    private Long id ;
-
+    private Long commonCodeSeq;
     @Column
-    private String commonCodeId ;
-
+    private String codeId;
     @Column
-    private Long seq;
-
+    private String codeNm;
     @Column
     private String upperCode;
     @Column
-    private String useYn;
+    private String codeUseYn;
     @Column
-    private String commonCodeNm;
+    private String codeOrder;
+
+    public void update(CommonCodeDto dto){
+        this.codeId = dto.getCodeId();
+        this.codeNm = dto.getCodeNm();
+        this.codeUseYn = dto.getCodeUseYn();
+        this.upperCode = dto.getUpperCode();
+        this.codeUseYn = dto.getCodeUseYn();
+        this.codeOrder = dto.getCodeOrder();
+    }
+
+
 
 
 }
