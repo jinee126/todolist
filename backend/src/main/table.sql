@@ -106,7 +106,23 @@ COMMENT ON COLUMN common_code.use_yn IS '사용여부 (0: 미사용, 1: 사용)'
 COMMENT ON COLUMN common_code.common_codeNm IS '코드명';
 COMMENT ON COLUMN common_code.seq IS '순서';
 
-        수정?
+CREATE TABLE menu_authority
+(
+    menu_authority_id VARCHAR2(50) PRIMARY KEY,
+    menu_id           VARCHAR2(50) NOT NULL,
+    create_date       DATE DEFAULT SYSDATE,
+    create_id         VARCHAR2(50) NOT NULL,
+    update_date       DATE DEFAULT SYSDATE,
+    update_id         VARCHAR2(50)
+);
+
+CREATE TABLE user_type_menu_authority
+(
+    common_code_id    VARCHAR2(50) NOT NULl,
+    menu_authority_id VARCHAR2(50) NOT NULL,
+    create_date       DATE DEFAULT SYSDATE,
+    create_id         VARCHAR2(50) NOT NULL
+);
 
 
 
