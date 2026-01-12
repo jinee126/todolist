@@ -24,3 +24,11 @@ logs/
 .env*.local
 application-local.yaml
 application-prod.yaml
+application.yaml
+
+#class
+.class
+
+# Dependency directories
+node_modules/
+jspm_packages/
