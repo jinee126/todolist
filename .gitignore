@@ -1,0 +1,38 @@
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Local environment files (민감정보)
+.env.local
+.env*.local
+application-local.yaml
+application-prod.yaml
+application.yaml
+
+#class
+*.class
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+backend/build/*
+backend/gradle/*
+backend/.gradle/*
