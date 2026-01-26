@@ -3,9 +3,9 @@ spring:
     name: todoList
   
   datasource:
-    url: jdbc:oracle:thin:@localhost:1522:XE
-    username: jinee
-    password: 1234
+    url: jdbc:oracle:thin:@localhost:1521:mydb
+    username: jinie
+    password: hj1026
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       maximum-pool-size: 10
@@ -29,3 +29,9 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.springframework : debug
+
+gemini:
+  api:
+    base-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent
+    key: AIzaSyBcYy3A_JlPZ7ZmENI2O_vwIEeH-WQW8BY
