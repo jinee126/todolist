@@ -34,4 +34,4 @@ logging:
 gemini:
   api:
     base-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent
-    key: AIzaSyBcYy3A_JlPZ7ZmENI2O_vwIEeH-WQW8BY
+    key:
