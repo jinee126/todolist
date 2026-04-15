@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend
+    container_name: my-backend-container
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: host.docker.internal
+
+  frontend:
+    build: ./frontend
+    container_name: my-frontend-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

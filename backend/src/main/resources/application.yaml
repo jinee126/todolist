@@ -3,7 +3,7 @@ spring:
     name: todoList
   
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:mydb
+    url: jdbc:oracle:thin:@${DB_HOST:127.0.0.1}:1521:mydb
     username: jinie
     password: hj1026
     driver-class-name: oracle.jdbc.OracleDriver
