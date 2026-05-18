@@ -1,6 +1,19 @@
 import { Todo, TodoRequest } from '@/types/todo';
 
 const API_BASE_URL = 'http://localhost:8080/api';
+const GEMINI_BASE_URL = 'http://localhost:8080';
+
+export const geminiApi = {
+  getRecommendations: async (): Promise<string> => {
+    const response = await fetch(`${GEMINI_BASE_URL}/gemini/ask`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch recommendations');
+    }
+    return response.text();
+  },
+};
 
 export const todoApi = {
   // 모든 Todo 조회

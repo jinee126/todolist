@@ -1,18 +1,16 @@
 package com.jinie.todoList.controller;
 
 
+import com.jinie.todoList.entity.Todo;
+import com.jinie.todoList.repository.TodoRepository;
 import com.jinie.todoList.service.GeminiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -20,18 +18,25 @@ import java.util.Map;
 public class GeminiController {
 
     private final GeminiService geminiService;
+    private final TodoRepository todoRepository;
 
     @PostMapping("/gemini/ask")
-    public Mono<String> callGemini(@RequestBody Map<String, Object> requestBody) {
-        log.debug("제미나이 요청");
-        String prompt ="";
-        prompt += "이게 내가 todolist 완료한 목록인데, 추천목록을 작성해줘";
-        prompt += "/ 앞 단어는 카테고리이야";
-        prompt += "공부/1.제미나이ai - spring ai 연동하기";
-        prompt += "취미/1.수영 다녀오기";
-        prompt += "카테고리별 리스트형태로만 2개씩만 작성해서 알려줘";
+    public Mono<String> callGemini() {
+        List<Todo> completedTodos = todoRepository.findAllByCompletedTrue();
+        log.debug("완료된 todo 수: {}", completedTodos.size());
 
-       return geminiService.getGeminiReponse(prompt);
+        if (completedTodos.isEmpty()) {
+            return Mono.just("완료된 할 일이 없어 추천을 생성할 수 없습니다.");
+        }
+
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("내가 완료한 todolist 목록이야:\n");
+        for (int i = 0; i < completedTodos.size(); i++) {
+            prompt.append(i + 1).append(". ").append(completedTodos.get(i).getTitle()).append("\n");
+        }
+        prompt.append("\n위 목록을 참고해서 다음에 할 만한 일을 카테고리별로 2개씩 추천해줘. 리스트 형태로만 작성해줘.");
+
+        return geminiService.getGeminiReponse(prompt.toString());
     }
 
 }
