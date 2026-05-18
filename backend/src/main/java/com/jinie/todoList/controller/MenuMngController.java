@@ -28,6 +28,11 @@ public class MenuMngController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @GetMapping
+    public List<MenuDto> getMenuList() {
+        return menuService.getMenuList();
+    }
+
 
 
 

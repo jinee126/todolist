@@ -27,7 +27,7 @@ public class MenuDto {
     private String createId;
     private String updateId;
 
-    private Menu  toEntity(){
+    public Menu  toEntity(){
         return  Menu.builder()
                 .menuSeq(this.menuSeq)
                 .parentMenuSeq(this.parentMenuSeq)
@@ -40,6 +40,21 @@ public class MenuDto {
                 .useYn(this.useYn)
                 .createId(this.createId)
                 .updateId(this.updateId)
+                .build();
+    }
+    public static MenuDto toDto(Menu entity){
+        return MenuDto.builder()
+                .menuSeq(entity.getMenuSeq())
+                .parentMenuSeq(entity.getParentMenuSeq())
+                .name(entity.getName())
+                .depth(entity.getDepth())
+                .menuUrl(entity.getMenuUrl())
+                .menuOrder(entity.getMenuOrder())
+                .iconClass(entity.getIconClass())
+                .description(entity.getDescription())
+                .useYn(entity.getUseYn())
+                .createId(entity.getCreateId())
+                .updateId(entity.getUpdateId())
                 .build();
     }
 

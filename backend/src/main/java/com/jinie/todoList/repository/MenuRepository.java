@@ -1,5 +1,6 @@
 package com.jinie.todoList.repository;
 
+import com.jinie.todoList.entity.Menu;
 import com.jinie.todoList.entity.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -7,6 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MenuRepository extends JpaRepository<Todo, Long> {
-
+public interface MenuRepository extends JpaRepository<Menu, Long> {
 }
